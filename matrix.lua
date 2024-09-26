@@ -1,4 +1,4 @@
--- Authentic Matrix Digital Rain for ComputerCraft Monitor (8x4)
+- Matrix Digital Rain for ComputerCraft Monitor (8x4)
 local monitor = peripheral.wrap("right") -- Adjust based on monitor position
 local w, h = 8, 4
 local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()"
@@ -20,7 +20,6 @@ for i = 1, w do
 end
 
 -- Set up monitor
-monitor.setTextScale(0.5)
 monitor.clear()
 
 -- Main animation loop
