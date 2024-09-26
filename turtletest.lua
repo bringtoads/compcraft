@@ -3,7 +3,7 @@ _HomeDirection = {71,38,77}
 -- Boundaries
 local maxX, maxY, maxZ = 500, 500, 500
 
-_DirectionLog= ""; 
+_DirectionLog= {}; 
 
 
 ---------------------  N  -----------------------
@@ -72,7 +72,10 @@ local function down(times)
         turtle.up()
     end
 end
-
+local function forward()
+end
+local function backward()
+end
 --breaks block if theres block
 local function right(times)
     times = times or 1
@@ -102,68 +105,6 @@ end
 local function uTurn()
 
 end
-    -- -- Move straight down to y = -53
-    -- while y > -53 do
-    --     -- Check if the block below contains bedrock
-    --     local success, block = turtle.inspectDown()
-    --     if success and block.name == "minecraft:bedrock" then
-    --         print("Bedrock encountered, moving horizontally to find a way down...")
-    --         turtle.up()
-    --         break -- Exit loop to start horizontal movement
-    --     end
-
-    --     -- Dig down if not at the desired depth
-    --     digForward()
-    --     turtle.down()
-    --     y = y - 1
-    --     sleep(0.5)
-    -- end
-
-    -- -- Begin strip mining at y = -53
-    -- while true do
-    --     -- Check if inventory is full
-    --     if isInventoryFull() then
-    --         print("Inventory full, returning to start.")
-    --         returnHome()
-    --         break
-    --     end
-
-    --     -- Check if the block in front contains diamonds
-    --     local success, block = turtle.inspect()
-        
-    --     --if success and block.name == "minecraft:diamond_ore" then
-    --     --   print("Diamond ore found!")
-    --     --    turtle.dig()
-    --     --end
-
-    --     -- Mine and move forward
-    --     digForward()
-    --     if not moveForward() then
-
-    --         print("Unable to move forward, stopping mining.")
-    --         returnHome()  -- Turtle returns home if it can't move forward
-    --         break
-    --     end
-
-    --     -- Check if turtle is outside the boundaries
-    --     if x >= maxX or y >= maxY or z >= maxZ then
-    --         print("Out of bounds. Returning home.")
-    --         returnHome()  -- Turtle returns home if out of bounds
-    --         break
-    --     end
-
-    --     -- Check fuel level
-    --     if turtle.getFuelLevel() < 100 then
-    --         print("Low fuel, returning to start.")
-    --         returnHome()  -- Turtle returns home if low on fuel
-    --         break
-    --     end
-
-    --     -- Sleep to prevent rapid execution
-    --     sleep(0.5)
-    -- end
-
-
 -- Function to return home by retracing steps
 local function returnHome()
 end
@@ -179,8 +120,11 @@ end
 local function mineForDiamonds()
     while y > -53 do
         local success, block = turtle.inspect()
+        print("inspecting block : "..block.name.."status"..success)
         if success and block.name == "minecraft:bedrock" then
-            turtle.tur
+            print("bedrock found! Unbreakeable block going up - blocks")
+            
+            turtle.up(5)
         end
         turtle.digDown()
 
