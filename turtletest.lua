@@ -286,14 +286,14 @@ local function mineForDiamonds()
     -- reach loaction
     while _DirectionLog.y > -53 do
         local success, block = turtle.inspect()
-        print("inspecting block : " .. block.name .. "status" .. success)
+    
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
             turtle.up(5)
             turtle.forward(5)
             turtle.down(4)
         end
-        turtle.digDown()
+        turtle.down()
     end
     while turtle.fuel() > 500 do
         local success, block = turtle.inspect()
