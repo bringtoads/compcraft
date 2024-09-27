@@ -90,15 +90,19 @@ local function justDig()
     turtle.digDown()
     turtle.turnRigt()
 end
-
+local function checkIfBedrock()
+end
 local function up(times)
     --y+
     times = times or 1
     direction = 4
     for i = 1, times do
         turtle.digUp()
-        turtle.up()
-        updatePosition()
+        local status = turtle.up()
+        if status then
+            turtle.up()
+            updatePosition()
+        end
     end
 end
 local function down(times)
@@ -107,8 +111,11 @@ local function down(times)
     direction = 5
     for i = 1, times do
         turtle.digDown()
-        turtle.down()
-        updatePosition()
+        local status = turtle.down()
+        if status then
+            turtle.down()
+            updatePosition(status)
+        end
     end
 end
 local function forward(times)
@@ -117,8 +124,11 @@ local function forward(times)
     direction = 0
     for i = 1, times do
         justDig()
-        turtle.forward()
-        updatePosition()
+        local status = turtle.forward()
+        if status then
+            turtle.forward()
+            updatePosition(status)
+        end
     end
 end
 local function backward(times)
@@ -130,8 +140,11 @@ local function backward(times)
     end
     for i = 1, times do
         justDig()
-        turtle.forward()
-        updatePosition()
+        local status = turtle.forward()
+        if status then
+            turtle.forward() 
+            updatePosition(status)
+        end 
     end
 end
 local function right(times)
@@ -141,8 +154,11 @@ local function right(times)
     direction = 1
     for i = 1, times do
         justDig()
-        turtle.forward()
-        updatePosition()
+        local status = turtle.forward()
+        if status then
+            turtle.forward() 
+            updatePosition(status)
+        end 
     end
 end
 
@@ -162,15 +178,15 @@ end
 --if turn right change facing direction to west
 local function turnRight()
     turtle.turnRight()
-    direction = (direction + 1) % 4     -- Update the direction (wrap around 0-3)
+    direction = (direction + 1) % 4 -- Update the direction (wrap around 0-3)
 end
 
 -- Example function to turn the turtle to the left (counter-clockwise)
 local function turnLeft()
     turtle.turnLeft()
-    direction = (direction - 1) % 4     -- Update the direction (wrap around 0-3)
+    direction = (direction - 1) % 4 -- Update the direction (wrap around 0-3)
     if direction < 0 then
-        direction = 3                   -- Fix wrap around for negative values
+        direction = 3               -- Fix wrap around for negative values
     end
 end
 
@@ -310,7 +326,6 @@ end
 local function mineForDiamonds()
     -- reach the y cordinate
     while _DirectionLog.y > _OreLevel do
-        
         local success, block = turtle.inspectDown()
         --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
         if success and block.name == "minecraft:bedrock" then
