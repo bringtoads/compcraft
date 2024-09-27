@@ -91,6 +91,7 @@ local function right(times)
     turtle.turnRight()
     for i=1,times do
         turtle.dig()
+        turtle.forward()
         _DirectionLog.x = _DirectionLog.x + i
     end
 end
@@ -101,6 +102,7 @@ local function left(times)
     turtle.turnLeft()
     for i=1,times do
         turtle.dig()
+        turtle.forward()
         _DirectionLog.x = _DirectionLog.x - i
     end
 end
