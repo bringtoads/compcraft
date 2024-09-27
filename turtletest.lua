@@ -1,3 +1,5 @@
+--t1
+
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
 -----  E  ------------------------------------- W-  ----
@@ -168,16 +170,17 @@ local function stripMine(length, width)
         for w = 1, width do
             for l = 1, length - 1 do
                 forward()
-                turtle.digUp()
-                turtle.digDown()
+                justDig()
             end
             
             -- Turn around at the end of each strip
             if w < width then
                 if w % 2 == 1 then
                     right(2)
+                    justDig()
                 else
                     left(2)
+                    justDig()
                 end
             end
         end
