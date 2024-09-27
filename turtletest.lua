@@ -1,4 +1,4 @@
---t2
+--t3
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -9,18 +9,15 @@
 ---------------------  Z- --------------------
 
 
-
-
-_HomeDirection = { x = 69, y = 38, z = 85 }     
+_HomeDirection = { x = 69, y = 38, z = 85 }
 _DirectionLog = { x = 69, y = -53, z = 85 }
+_MaxBoundries = { x = 500, z = 500 }
 
--- Boundaries
-local maxX, maxY, maxZ = 500, 500, 500
 -- place turtle facing south
-local south = "z+" --0
-local west = "x-"  --1
-local north = "z-" -- 2
-local east = "x+"  -- 3
+local south = "z+"     --0
+local west = "x-"      --1
+local north = "z-"     -- 2
+local east = "x+"      -- 3
 local ypositive = "y+" --4
 local ynegative = "y-" --5
 
@@ -39,7 +36,7 @@ local function updatePosition()
     elseif direction == 4 then
         _DirectionLog.y = _DirectionLog.y + 1
     elseif direction == 5 then
-        _DirectionLog.y = _DirectionLog.y- 1
+        _DirectionLog.y = _DirectionLog.y - 1
     end
 end
 
@@ -74,17 +71,17 @@ local function justDig()
     turtle.dig()
     turtle.digUp()
     turtle.digDown()
-end 
+end
 
--- facing direction 
+-- facing direction
 -- (forward z+) south = 0
--- (right x-) west = 1 
+-- (right x-) west = 1
 -- (backward z-) north = 2
 --  (left x+) east  = 3
 -- (up y+) =4
 -- (donw y-) = 5
 
--- mathi 
+-- mathi
 local function up(times)
     times = times or 1
     direction = 4
@@ -109,7 +106,7 @@ end
 -- when turtle facing south
 local function forward(times)
     times = times or 1
-    
+
     direction = 0
     for i = 1, times do
         justDig()
@@ -121,8 +118,8 @@ end
 -- pachadi
 local function backward(times)
     times = times or 1
-    direction =2 
-    for i =1,2 do
+    direction = 2
+    for i = 1, 2 do
         turtle.turnRight()
     end
     for i = 1, times do
@@ -158,7 +155,7 @@ end
 
 local function stripMine(length, width)
     -- Ensure we have fuel
-    if turtle.getFuelLevel() < (length * width  * 2)  then
+    if turtle.getFuelLevel() < (length * width * 2) then
         print("Not enough fuel!")
         return
     end
@@ -166,42 +163,101 @@ local function stripMine(length, width)
         print("Inventory is full! Please clear some items.")
         return
     end
-    --for h = 1, height do
-        for w = 1, width do
-            for l = 1, length - 1 do
-                forward()
+    for w = 1, width do
+        for l = 1, length - 1 do
+            forward()
+            justDig()
+        end
+
+        -- Turn around at the end of each strip
+        if w < width then
+            if w % 2 == 1 then
+                right(2)
+                justDig()
+            else
+                left(2)
                 justDig()
             end
-            
-            -- Turn around at the end of each strip
-            if w < width then
-                if w % 2 == 1 then
-                    right(2)
-                    justDig()
-                else
-                    left(2)
-                    justDig()
-                end
-            end
         end
-        
-        -- Move up for the next layer if not at top
-        -- if h < height then
-        --     for i = 1, width - 1 do
-        --         turtle.back()
-        --     end
-        --     turtle.digUp()
-        --     turtle.up()
-        --     turtle.turnRight()
-        --     turtle.turnRight()
-        -- end
-   -- end
-    
-    -- Return to starting position
-    -- for i = 1, height - 1 do
-    --     turtle.down()
-    -- end
+    end
 end
+
+local function stripMineWithSideCheck(length, width)
+    local initialX, initialY, initialZ = _DirectionLog.x, _DirectionLog.y, _DirectionLog.z
+
+    -- Helper function to move forward and check side blocks
+    local function moveAndCheckSides()
+        -- Dig the front block and move forward
+        turtle.dig()
+        turtle.forward()
+        updatePosition()
+
+        -- Check and dig the block to the left
+        turtle.turnLeft()
+        if turtle.inspect() then
+            turtle.dig()
+        end
+        turtle.turnRight()
+
+        -- Check and dig the block to the right
+        turtle.turnRight()
+        if turtle.inspect() then
+            turtle.dig()
+        end
+        turtle.turnLeft()
+    end
+
+    -- Function to mine a straight line and check sides
+    local function mineStraightLine(length)
+        for i = 1, length do
+            moveAndCheckSides()
+        end
+    end
+
+    -- Function to return to the starting point after digging
+    local function returnToStart()
+        turtle.turnRight()
+        turtle.turnRight() -- turn 180 to face the start point
+        for i = 1, length do
+            turtle.forward()
+            updatePosition()
+        end
+        turtle.turnRight()
+        turtle.turnRight() -- face the original direction again
+    end
+
+    -- Start strip mining
+    for w = 0, width - 1, 2 do
+        -- Mine forward
+        mineStraightLine(length)
+
+        -- Return to starting point
+        returnToStart()
+
+        -- Move 2 blocks to the right
+        turtle.turnRight()
+        for i = 1, 2 do
+            turtle.dig()
+            turtle.forward()
+            updatePosition()
+        end
+        turtle.turnLeft()
+    end
+
+    -- Return to the exact initial coordinates
+    returnToStart()
+
+    -- Move back to the original initial point if needed
+    while _DirectionLog.x > initialX do
+        turtle.turnRight()
+        turtle.forward()
+        updatePosition()
+    end
+    print("Returned to initial starting position: X=" .. initialX .. ", Y=" .. initialY .. ", Z=" .. initialZ)
+end
+
+-- Example usage:
+-- stripMineWithSideCheck(20, 10)
 
 
 -- Function to return home by retracing steps
@@ -255,7 +311,7 @@ local function returnHome()
     end
 
     print("Returned home to coordinates: X=" ..
-    _HomeDirection.x .. ", Y=" .. _HomeDirection.y .. ", Z=" .. _HomeDirection.z)
+        _HomeDirection.x .. ", Y=" .. _HomeDirection.y .. ", Z=" .. _HomeDirection.z)
 end
 
 -- Function to refuel the turtle
@@ -277,17 +333,16 @@ local function mineForDiamonds()
             down(4)
         end
         down()
-        print(_DirectionLog.y)
     end
     while checkFuel() > 500 do
         local success, block = turtle.inspect()
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
             up(5)
-            forward(5)
+            forward(2)
             down(5)
         end
-        stripMine(10,10)
+        stripMineWithSideCheck(10, 10)
     end
     returnHome()
 end
