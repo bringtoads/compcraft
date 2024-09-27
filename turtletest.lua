@@ -98,7 +98,7 @@ end
 --breaks block if theres block
 local function left(times)
     times = times or 1
-    turtle.left()
+    turtle.turnLeft()
     for i=1,times do
         turtle.dig()
         _DirectionLog.x = _DirectionLog.x - i
