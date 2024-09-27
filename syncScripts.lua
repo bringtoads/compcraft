@@ -1,3 +1,6 @@
+local url = "https://raw.githubusercontent.com/username/repository-name/main/your-script.lua"  -- Replace with your script's URL
+local filename = "Initialize"  -- 
+
 function downlaodScript(url, filenam)
     local response = http.get(url)
 
@@ -34,8 +37,6 @@ function runScript(filename, ...)
 end
 
 -- Example usage
-local url = "https://raw.githubusercontent.com/username/repository-name/main/your-script.lua"  -- Replace with your script's URL
-local filename = "your-script.lua"  -- Replace with desired local filename
 
 -- Download the script
 downloadScript(url, filename)
