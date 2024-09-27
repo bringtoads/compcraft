@@ -1,4 +1,4 @@
---t3
+--t4
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -10,7 +10,7 @@
 
 
 _HomeDirection = { x = 69, y = 38, z = 85 }
-_DirectionLog = { x = 69, y = -53, z = 85 }
+_DirectionLog = { x = 69, y = 38, z = 85 }
 _MaxBoundries = { x = 500, z = 500 }
 
 -- place turtle facing south
@@ -188,21 +188,21 @@ local function stripMineWithSideCheck(length, width)
     -- Helper function to move forward and check side blocks
     local function moveAndCheckSides()
         -- Dig the front block and move forward
-        turtle.dig()
+        justDig()
         turtle.forward()
         updatePosition()
 
         -- Check and dig the block to the left
         turtle.turnLeft()
         if turtle.inspect() then
-            turtle.dig()
+            justDig()
         end
         turtle.turnRight()
 
         -- Check and dig the block to the right
         turtle.turnRight()
         if turtle.inspect() then
-            turtle.dig()
+            justDig()
         end
         turtle.turnLeft()
     end
