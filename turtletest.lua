@@ -154,18 +154,20 @@ local function left(times)
     end
 end
 
-local function stripMine(length, width, height)
+local function stripMine(length, width)
     -- Ensure we have fuel
-    if turtle.getFuelLevel() < (length * width * height * 2) then
+    if turtle.getFuelLevel() < (length * width * height * 2)  then
         print("Not enough fuel!")
         return
     end
-
+    if isInventoryFull() then
+        print("Inventory is full! Please clear some items.")
+        return
+    end
     for h = 1, height do
         for w = 1, width do
             for l = 1, length - 1 do
-                turtle.dig()
-                turtle.forward()
+                forward()
                 turtle.digUp()
                 turtle.digDown()
             end
@@ -173,54 +175,31 @@ local function stripMine(length, width, height)
             -- Turn around at the end of each strip
             if w < width then
                 if w % 2 == 1 then
-                    turtle.turnRight()
-                    turtle.dig()
-                    turtle.forward()
-                    turtle.turnRight()
+                    right(2)
                 else
-                    turtle.turnLeft()
-                    turtle.dig()
-                    turtle.forward()
-                    turtle.turnLeft()
+                    left(2)
                 end
             end
         end
         
         -- Move up for the next layer if not at top
-        if h < height then
-            for i = 1, width - 1 do
-                turtle.back()
-            end
-            turtle.digUp()
-            turtle.up()
-            turtle.turnRight()
-            turtle.turnRight()
-        end
+        -- if h < height then
+        --     for i = 1, width - 1 do
+        --         turtle.back()
+        --     end
+        --     turtle.digUp()
+        --     turtle.up()
+        --     turtle.turnRight()
+        --     turtle.turnRight()
+        -- end
     end
     
     -- Return to starting position
-    for i = 1, height - 1 do
-        turtle.down()
-    end
+    -- for i = 1, height - 1 do
+    --     turtle.down()
+    -- end
 end
 
--- Usage example:
--- stripMine(10, 5, 3)  -- This will mine a 10x5x3 area
-local function turn180()
-    for i = 1, 2 do
-        print("turn right")
-        turtle.turnRight()
-    end
-end
-local function uTurnRight()
-    for i = 1, 2 do
-        turtle.right()
-    end
-end
-local function uturnLeft()
-    turtle.left()
-    turtle.dig()
-end
 
 -- Function to return home by retracing steps
 local function returnHome()
@@ -288,11 +267,11 @@ local function mineForDiamonds()
         local success, block = turtle.inspect()
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
-            turtle.up(5)
-            turtle.forward(5)
-            turtle.down(4)
+            up(5)
+            forward(5)
+            down(4)
         end
-        turtle.down()
+        down()
         print(_DirectionLog.y)
     end
     while turtle.fuel() > 500 do
@@ -300,11 +279,11 @@ local function mineForDiamonds()
         print("inspecting block : " .. block.name .. "status" .. success)
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
-            turtle.up(5)
-            turtle.forward(5)
-            turtle.down(5)
+            up(5)
+            forward(5)
+            down(5)
         end
-        stripMine(9,9,2)
+        stripMine(10,10)
     end
     returnHome()
 end
