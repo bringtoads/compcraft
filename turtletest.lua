@@ -24,9 +24,10 @@
 -- local ypositivedir = "y+" --4
 -- local ynegativedir = "y-" --5
 
-_OreLevel = 30
-_HomeDirection = { x = 69, y = 38, z = 85 }
-_DirectionLog = { x = 69, y = 38, z = 85 }
+_OreLevel = 160
+--_HomeDirection = { x = 69, y = 38, z = 85 }
+_HomeDirection = { x = 249, y = 163, z = -202 }
+_DirectionLog = { x = 249, y = 163, z = -202 }
 _MaxBoundries = { x = 500, z = 500 }
 
 local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
