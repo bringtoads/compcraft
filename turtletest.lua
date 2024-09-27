@@ -1,4 +1,4 @@
---t7
+--t8
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -16,19 +16,18 @@
 -- (up y+) =4
 -- (donw y-) = 5
 
+-- place turtle facing south
+-- local southdir = "z+"     --0
+-- local westdir = "x-"      --1
+-- local northdir = "z-"     -- 2
+-- local eastdir = "x+"      -- 3
+-- local ypositivedir = "y+" --4
+-- local ynegativedir = "y-" --5
 
+_OreLevel = 30
 _HomeDirection = { x = 69, y = 38, z = 85 }
 _DirectionLog = { x = 69, y = 38, z = 85 }
 _MaxBoundries = { x = 500, z = 500 }
-
--- place turtle facing south
-local southdir = "z+"     --0
-local westdir = "x-"      --1
-local northdir = "z-"     -- 2
-local eastdir = "x+"      -- 3
-local ypositivedir = "y+" --4
-local ynegativedir = "y-" --5
-
 
 local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
 
@@ -82,6 +81,16 @@ local function justDig()
     turtle.dig()
     turtle.digUp()
     turtle.digDown()
+    turtle.turnRight()
+    turtle.dig()
+    turtle.digUp()
+    turtle.digDown()
+    turtle.turnLeft()
+    turtle.turnLeft()
+    turtle.dig()
+    turtle.digUp()
+    turtle.digDown()
+    turtle.turnRigt()
 end
 
 local function up(times)
@@ -131,7 +140,7 @@ local function right(times)
     turtle.turnRight()
     direction = 1
     for i = 1, times do
-        turtle.dig()
+        justDig()
         turtle.forward()
         updatePosition()
     end
@@ -300,7 +309,7 @@ end
 -- Function to mine for diamonds
 local function mineForDiamonds()
     -- reach the y cordinate
-    while _DirectionLog.y > -53 do
+    while _DirectionLog.y > _OreLevel do
         local success, block = turtle.inspectDown()
         --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
         if success and block.name == "minecraft:bedrock" then
