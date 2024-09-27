@@ -259,7 +259,9 @@ end
 local function refuel()
     turtle.refuel()
 end
-
+local function checkFuel()
+    return turtle.getFuelLevel()
+end
 -- Function to mine for diamonds
 local function mineForDiamonds()
     -- reach loaction
@@ -274,7 +276,7 @@ local function mineForDiamonds()
         down()
         print(_DirectionLog.y)
     end
-    while turtle.fuel() > 500 do
+    while turtle.checkFuel() > 500 do
         local success, block = turtle.inspect()
         print("inspecting block : " .. block.name .. "status" .. success)
         if success and block.name == "minecraft:bedrock" then
