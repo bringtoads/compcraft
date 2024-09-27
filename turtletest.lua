@@ -48,9 +48,6 @@ local function updatePosition(success)
         elseif direction == 5 then -- Moving down (Y-)
             _DirectionLog.y = _DirectionLog.y - 1
         end
-
-        -- No need to reset direction here! It should stay as the current direction.
-        turtle.forward()
     end
 end
 
@@ -95,6 +92,7 @@ local function justDig()
 end
 
 local function up(times)
+    --y+
     times = times or 1
     direction = 4
     for i = 1, times do
@@ -104,6 +102,7 @@ local function up(times)
     end
 end
 local function down(times)
+    --y-
     times = times or 1
     direction = 5
     for i = 1, times do
@@ -311,7 +310,7 @@ end
 local function mineForDiamonds()
     -- reach the y cordinate
     while _DirectionLog.y > _OreLevel do
-        print(_DirectionLog.y)
+        
         local success, block = turtle.inspectDown()
         --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
         if success and block.name == "minecraft:bedrock" then
@@ -321,6 +320,7 @@ local function mineForDiamonds()
             down(4)
         end
         down()
+        print(_DirectionLog.y)
     end
     while checkFuel() > 500 do
         local success, block = turtle.inspect()
