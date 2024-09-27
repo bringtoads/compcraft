@@ -1,4 +1,4 @@
---t5
+--t6
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -8,18 +8,26 @@
 ---------------------  N  ------------------
 ---------------------  Z- --------------------
 
+-- facing direction
+-- (forward z+) south = 0
+-- (right x-) west = 1
+-- (backward z-) north = 2
+--  (left x+) east  = 3
+-- (up y+) =4
+-- (donw y-) = 5
+
 
 _HomeDirection = { x = 69, y = 38, z = 85 }
 _DirectionLog = { x = 69, y = 38, z = 85 }
 _MaxBoundries = { x = 500, z = 500 }
 
 -- place turtle facing south
-local south = "z+"     --0
-local west = "x-"      --1
-local north = "z-"     -- 2
-local east = "x+"      -- 3
-local ypositive = "y+" --4
-local ynegative = "y-" --5
+local southdir = "z+"     --0
+local westdir = "x-"      --1
+local northdir = "z-"     -- 2
+local eastdir = "x+"      -- 3
+local ypositivedir = "y+" --4
+local ynegativedir = "y-" --5
 
 
 local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
@@ -27,17 +35,17 @@ local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
 local function updatePosition(success)
     if success then
         -- Update the position based on the current direction
-        if direction == 0 then  -- Facing South
+        if direction == 0 then     -- Facing South
             _DirectionLog.z = _DirectionLog.z + 1
-        elseif direction == 1 then  -- Facing West
+        elseif direction == 1 then -- Facing West
             _DirectionLog.x = _DirectionLog.x - 1
-        elseif direction == 2 then  -- Facing North
+        elseif direction == 2 then -- Facing North
             _DirectionLog.z = _DirectionLog.z - 1
-        elseif direction == 3 then  -- Facing East
+        elseif direction == 3 then -- Facing East
             _DirectionLog.x = _DirectionLog.x + 1
-        elseif direction == 4 then  -- Moving up (Y+)
+        elseif direction == 4 then -- Moving up (Y+)
             _DirectionLog.y = _DirectionLog.y + 1
-        elseif direction == 5 then  -- Moving down (Y-)
+        elseif direction == 5 then -- Moving down (Y-)
             _DirectionLog.y = _DirectionLog.y - 1
         end
 
@@ -60,7 +68,6 @@ local function init()
     return true -- Initialization successful
 end
 
-
 -- Function to check if inventory is full
 local function isInventoryFull()
     for slot = 1, 16 do
@@ -77,15 +84,6 @@ local function justDig()
     turtle.digDown()
 end
 
--- facing direction
--- (forward z+) south = 0
--- (right x-) west = 1
--- (backward z-) north = 2
---  (left x+) east  = 3
--- (up y+) =4
--- (donw y-) = 5
-
--- mathi
 local function up(times)
     times = times or 1
     direction = 4
@@ -95,7 +93,6 @@ local function up(times)
         updatePosition()
     end
 end
--- tala
 local function down(times)
     times = times or 1
     direction = 5
@@ -105,13 +102,9 @@ local function down(times)
         updatePosition()
     end
 end
-
--- agadi
--- when turtle facing south
 local function forward(times)
     -- z+
     times = times or 1
-
     direction = 0
     for i = 1, times do
         justDig()
@@ -119,8 +112,6 @@ local function forward(times)
         updatePosition()
     end
 end
-
--- pachadi
 local function backward(times)
     -- z+
     times = times or 1
@@ -134,8 +125,6 @@ local function backward(times)
         updatePosition()
     end
 end
-
---right
 local function right(times)
     --x+
     times = times or 1
@@ -161,20 +150,20 @@ local function left(times)
     end
 end
 
--- Example function to turn the turtle to the right (clockwise)
-    local function turnRight()
-        turtle.turnRight()
-        direction = (direction + 1) % 4 -- Update the direction (wrap around 0-3)
+--if turn right change facing direction to west
+local function turnRight()
+    turtle.turnRight()
+    direction = (direction + 1) % 4     -- Update the direction (wrap around 0-3)
+end
+
+-- Example function to turn the turtle to the left (counter-clockwise)
+local function turnLeft()
+    turtle.turnLeft()
+    direction = (direction - 1) % 4     -- Update the direction (wrap around 0-3)
+    if direction < 0 then
+        direction = 3                   -- Fix wrap around for negative values
     end
-    
-    -- Example function to turn the turtle to the left (counter-clockwise)
-    local function turnLeft()
-        turtle.turnLeft()
-        direction = (direction - 1) % 4 -- Update the direction (wrap around 0-3)
-        if direction < 0 then
-            direction = 3  -- Fix wrap around for negative values
-        end
-    end
+end
 
 local function stripMineWithSideCheck(length, width)
     local initialX, initialY, initialZ = _DirectionLog.x, _DirectionLog.y, _DirectionLog.z
@@ -183,20 +172,12 @@ local function stripMineWithSideCheck(length, width)
     local function moveAndCheckSides()
         -- Dig the front block and move forward
         forward()
-
-
         -- Check and dig the block to the left
         turtle.turnLeft()
-        --if turtle.inspect() then
-            justDig()
-        --end
+        justDig()
         turtle.turnRight()
-
-        -- Check and dig the block to the right
         turtle.turnRight()
-        --if turtle.inspect() then
-            justDig()
-        --end
+        justDig()
         turtle.turnLeft()
     end
 
@@ -315,11 +296,13 @@ end
 local function checkFuel()
     return turtle.getFuelLevel()
 end
+
 -- Function to mine for diamonds
 local function mineForDiamonds()
-    -- reach loaction
+    -- reach the y cordinate
     while _DirectionLog.y > -53 do
-        local success, block = turtle.inspect()
+        local success, block = turtle.inspectDown()
+        --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
             up(5)
@@ -327,6 +310,18 @@ local function mineForDiamonds()
             down(4)
         end
         down()
+    end
+    while _DirectionLog.y < -53 do 
+        up()
+        local success, block = turtle.inspectUp()
+        --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
+        if success and block.name == "minecraft:bedrock" then
+            print("bedrock found! Unbreakeable block going up - blocks")
+            down(5)
+            right(5)
+            left(5)
+            up(4)
+        end
     end
     while checkFuel() > 500 do
         local success, block = turtle.inspect()
@@ -341,19 +336,6 @@ local function mineForDiamonds()
     returnHome()
 end
 
-
-
-local function testMovement()
-    up(5)
-    down(5)
-    forward(5)
-    backward(5)
-    right(5)
-    left(5)
-    print(_DirectionLog.x)
-    print(_DirectionLog.y)
-    print(_DirectionLog.z)
-end
 -- Main execution
 if init() then
     print("Starting mining operation for diamonds...")
