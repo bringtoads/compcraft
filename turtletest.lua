@@ -24,23 +24,27 @@ local ynegative = "y-" --5
 
 local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
 
-local function updatePosition()
-    if direction == 0 then
-        _DirectionLog.z = _DirectionLog.z + 1
-    elseif direction == 1 then
-        _DirectionLog.x = _DirectionLog.x - 1
-    elseif direction == 2 then
-        _DirectionLog.z = _DirectionLog.z - 1
-    elseif direction == 3 then
-        _DirectionLog.x = _DirectionLog.x + 1
-    elseif direction == 4 then
-        _DirectionLog.y = _DirectionLog.y + 1
-    elseif direction == 5 then
-        _DirectionLog.y = _DirectionLog.y - 1
+local function updatePosition(success)
+    if success then
+        -- Update the position based on the current direction
+        if direction == 0 then  -- Facing South
+            _DirectionLog.z = _DirectionLog.z + 1
+        elseif direction == 1 then  -- Facing West
+            _DirectionLog.x = _DirectionLog.x - 1
+        elseif direction == 2 then  -- Facing North
+            _DirectionLog.z = _DirectionLog.z - 1
+        elseif direction == 3 then  -- Facing East
+            _DirectionLog.x = _DirectionLog.x + 1
+        elseif direction == 4 then  -- Moving up (Y+)
+            _DirectionLog.y = _DirectionLog.y + 1
+        elseif direction == 5 then  -- Moving down (Y-)
+            _DirectionLog.y = _DirectionLog.y - 1
+        end
+
+        -- No need to reset direction here! It should stay as the current direction.
+        turtle.forward()
     end
 end
-
-
 
 -- Function to initialize the Turtle
 local function init()
@@ -105,6 +109,7 @@ end
 -- agadi
 -- when turtle facing south
 local function forward(times)
+    -- z+
     times = times or 1
 
     direction = 0
@@ -117,6 +122,7 @@ end
 
 -- pachadi
 local function backward(times)
+    -- z+
     times = times or 1
     direction = 2
     for i = 1, 2 do
@@ -131,6 +137,7 @@ end
 
 --right
 local function right(times)
+    --x+
     times = times or 1
     turtle.turnRight()
     direction = 1
@@ -143,6 +150,7 @@ end
 
 --left
 local function left(times)
+    -- x-
     times = times or 1
     turtle.turnLeft()
     direction = 3
@@ -153,34 +161,20 @@ local function left(times)
     end
 end
 
-local function stripMine(length, width)
-    -- Ensure we have fuel
-    if turtle.getFuelLevel() < (length * width * 2) then
-        print("Not enough fuel!")
-        return
+-- Example function to turn the turtle to the right (clockwise)
+    local function turnRight()
+        turtle.turnRight()
+        direction = (direction + 1) % 4 -- Update the direction (wrap around 0-3)
     end
-    if isInventoryFull() then
-        print("Inventory is full! Please clear some items.")
-        return
-    end
-    for w = 1, width do
-        for l = 1, length - 1 do
-            forward()
-            justDig()
-        end
-
-        -- Turn around at the end of each strip
-        if w < width then
-            if w % 2 == 1 then
-                right(2)
-                justDig()
-            else
-                left(2)
-                justDig()
-            end
+    
+    -- Example function to turn the turtle to the left (counter-clockwise)
+    local function turnLeft()
+        turtle.turnLeft()
+        direction = (direction - 1) % 4 -- Update the direction (wrap around 0-3)
+        if direction < 0 then
+            direction = 3  -- Fix wrap around for negative values
         end
     end
-end
 
 local function stripMineWithSideCheck(length, width)
     local initialX, initialY, initialZ = _DirectionLog.x, _DirectionLog.y, _DirectionLog.z
@@ -188,22 +182,21 @@ local function stripMineWithSideCheck(length, width)
     -- Helper function to move forward and check side blocks
     local function moveAndCheckSides()
         -- Dig the front block and move forward
-        justDig()
-        turtle.forward()
-        updatePosition()
+        forward()
+
 
         -- Check and dig the block to the left
         turtle.turnLeft()
-        if turtle.inspect() then
+        --if turtle.inspect() then
             justDig()
-        end
+        --end
         turtle.turnRight()
 
         -- Check and dig the block to the right
         turtle.turnRight()
-        if turtle.inspect() then
+        --if turtle.inspect() then
             justDig()
-        end
+        --end
         turtle.turnLeft()
     end
 
@@ -216,12 +209,13 @@ local function stripMineWithSideCheck(length, width)
 
     -- Function to return to the starting point after digging
     local function returnToStart()
-        turtle.turnRight()
-        turtle.turnRight() -- turn 180 to face the start point
-        for i = 1, length do
-            turtle.forward()
-            updatePosition()
-        end
+        -- turtle.turnRight()
+        -- turtle.turnRight() -- turn 180 to face the start point
+        -- for i = 1, length do
+        --     turtle.forward()
+        --     updatePosition()
+        -- end
+        backward(length)
         turtle.turnRight()
         turtle.turnRight() -- face the original direction again
     end
