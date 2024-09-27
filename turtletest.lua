@@ -20,7 +20,9 @@ local north = "z-"
 local west = "x-"
 
 -- Direction: 0 = North, 1 = East, 2 = South, 3 = West
-local direction = 0 -- 0 = North, 1 = East, 2 = South, 3 = West
+--local direction = 0 -- 0 = North, 1 = East, 2 = South, 3 = West
+
+local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
 
 -- Function to initialize the Turtle
 local function init()
@@ -107,15 +109,16 @@ local function left(times)
     end
 end
 local function turn180()
-
     for i=1, 2 do 
         print("turn right")
-        turtle.right()
+        turtle.turnRight()
     end
 end
 local function uTurnRight()
-    turtle.right()
-    turtle.dig()
+    for i=1, 2 do 
+        turtle.right()
+    end
+   
 end
 local function uturnLeft()
     turtle.left()
