@@ -284,7 +284,7 @@ end
 -- Function to mine for diamonds
 local function mineForDiamonds()
     -- reach loaction
-    while y > -53 do
+    while _DirectionLog.y > -53 do
         local success, block = turtle.inspect()
         print("inspecting block : " .. block.name .. "status" .. success)
         if success and block.name == "minecraft:bedrock" then
