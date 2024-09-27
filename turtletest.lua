@@ -1,4 +1,4 @@
---t1
+--t2
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -11,8 +11,8 @@
 
 
 
-_HomeDirection = { x = 71, y = 38, z = 77 }
-_DirectionLog = { x = 71, y = 38, z = 77 };
+_HomeDirection = { x = 69, y = 38, z = 85 }     
+_DirectionLog = { x = 69, y = -53, z = 85 }
 
 -- Boundaries
 local maxX, maxY, maxZ = 500, 500, 500
@@ -279,7 +279,7 @@ local function mineForDiamonds()
         down()
         print(_DirectionLog.y)
     end
-    while turtle.checkFuel() > 500 do
+    while checkFuel() > 500 do
         local success, block = turtle.inspect()
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
