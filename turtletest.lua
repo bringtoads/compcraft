@@ -156,7 +156,7 @@ end
 
 local function stripMine(length, width)
     -- Ensure we have fuel
-    if turtle.getFuelLevel() < (length * width * height * 2)  then
+    if turtle.getFuelLevel() < (length * width  * 2)  then
         print("Not enough fuel!")
         return
     end
@@ -164,7 +164,7 @@ local function stripMine(length, width)
         print("Inventory is full! Please clear some items.")
         return
     end
-    for h = 1, height do
+    --for h = 1, height do
         for w = 1, width do
             for l = 1, length - 1 do
                 forward()
@@ -192,7 +192,7 @@ local function stripMine(length, width)
         --     turtle.turnRight()
         --     turtle.turnRight()
         -- end
-    end
+   -- end
     
     -- Return to starting position
     -- for i = 1, height - 1 do
@@ -278,7 +278,6 @@ local function mineForDiamonds()
     end
     while turtle.checkFuel() > 500 do
         local success, block = turtle.inspect()
-        print("inspecting block : " .. block.name .. "status" .. success)
         if success and block.name == "minecraft:bedrock" then
             print("bedrock found! Unbreakeable block going up - blocks")
             up(5)
