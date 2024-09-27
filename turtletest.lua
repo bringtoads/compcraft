@@ -305,7 +305,7 @@ local function mineForDiamonds()
             turtle.forward(5)
             turtle.down(5)
         end
-        stripMine(9,9,9)
+        stripMine(9,9,2)
     end
     returnHome()
 end
