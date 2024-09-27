@@ -1,4 +1,4 @@
---t8
+--t9
 
 ---------------------  S  -----------------------
 ---------------------  Z+ -----------------------
@@ -26,8 +26,8 @@
 
 _OreLevel = 160
 --_HomeDirection = { x = 69, y = 38, z = 85 }
-_HomeDirection = { x = 249, y = 163, z = -202 }
-_DirectionLog = { x = 249, y = 163, z = -202 }
+_HomeDirection = { x = 249, y = 163, z = -301 }
+_DirectionLog = { x = 249, y = 163, z = -301 }
 _MaxBoundries = { x = 500, z = 500 }
 
 local direction = 0 -- 0 = South, 1 = West, 2 = North, 3 = East
@@ -311,6 +311,7 @@ end
 local function mineForDiamonds()
     -- reach the y cordinate
     while _DirectionLog.y > _OreLevel do
+        print(_DirectionLog.y)
         local success, block = turtle.inspectDown()
         --if bottom block is bed rock move 5 blocks up 5 blocks forward and down 4 blocks
         if success and block.name == "minecraft:bedrock" then
